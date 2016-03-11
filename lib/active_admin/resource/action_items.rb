@@ -83,7 +83,7 @@ module ActiveAdmin
         add_action_item :destroy, only: :show do
           if controller.action_methods.include?('destroy') && authorized?(ActiveAdmin::Auth::DESTROY, resource)
             link_to I18n.t('active_admin.delete_model', model: active_admin_config.resource_label), resource_path(resource),
-              method: :delete, data: {confirm: I18n.t('active_admin.delete_confirmation'), toggle: 'modal_delete_confirm'}, class:'btn btn-danger'
+              method: :delete, data: {confirm: I18n.t('active_admin.delete_confirmation')}, class:'btn btn-danger'
           end
         end
       end
