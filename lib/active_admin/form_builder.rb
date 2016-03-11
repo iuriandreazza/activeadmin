@@ -21,7 +21,7 @@ module ActiveAdmin
 
     def cancel_link(url = {action: "index"}, html_options = {}, li_attrs = {})
       li_attrs[:class] ||= "cancel"
-      li_content = template.link_to I18n.t('active_admin.cancel'), url, html_options, class: 'btn btn-info'
+      li_content = template.link_to I18n.t('active_admin.cancel'), url, html_options
       template.content_tag(:li, li_content, li_attrs)
     end
 
