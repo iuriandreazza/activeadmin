@@ -98,7 +98,7 @@ module ActiveAdmin
         options = args.extract_options!
         legend = args.shift
         legend_tag = legend ? "<legend><span>#{legend}</span></legend>" : ""
-        klasses = ["inputs"]
+        klasses = ["inputs", "form-group"]
         klasses << options[:class] if options[:class]
         @opening_tag = "<fieldset class=\"#{klasses.join(" ")}\">#{legend_tag}<ol>"
         @closing_tag = "</ol></fieldset>"
@@ -108,7 +108,7 @@ module ActiveAdmin
 
     class SemanticActionsProxy < FormtasticProxy
       def build(form_builder, *args, &block)
-        @opening_tag = "<fieldset class=\"actions\"><ol>"
+        @opening_tag = "<fieldset class=\"actions form-group\"><ol>"
         @closing_tag = "</ol></fieldset>"
         super(*args, &block)
       end
