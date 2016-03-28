@@ -67,6 +67,10 @@ module ActiveAdmin
       render_in_context context, @label
     end
 
+    def label!
+      @label
+    end
+
     def url(context = nil)
       render_in_context context, @url
     end

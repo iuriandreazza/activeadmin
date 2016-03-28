@@ -65,7 +65,7 @@ module ActiveAdmin
       protected
 
       def build_pagination_with_formats(options)
-        div id: "index_footer" do
+        div class:"dataTables_paginate paging_bootstrap pagination" do
           build_per_page_select if @per_page.is_a?(Array)
           build_pagination
           div(page_entries_info(options).html_safe, class: "pagination_information")
@@ -81,16 +81,18 @@ module ActiveAdmin
       end
 
       def build_per_page_select
-        div class: "pagination_per_page" do
-          text_node "Per page:"
-          select do
-            @per_page.each do |per_page|
-              option(
-                per_page,
-                value: per_page,
-                selected: collection.limit_value == per_page ? "selected" : nil
-              )
+        div class: "dataTables_length" do
+          label do
+            select(class:'form-control') do
+              @per_page.each do |per_page|
+                option(
+                    per_page,
+                    value: per_page,
+                    selected: collection.limit_value == per_page ? "selected" : nil
+                )
+              end
             end
+            text_node "Per page:"
           end
         end
       end
@@ -111,6 +113,9 @@ module ActiveAdmin
           options[:right] = 0
         end
 
+        ul do
+          li
+        end
         text_node paginate collection, options
       end
 
@@ -134,9 +139,9 @@ module ActiveAdmin
         if @display_total
           if collection.num_pages < 2
             case collection_size
-            when 0; I18n.t("active_admin.pagination.empty",    model: entries_name)
-            when 1; I18n.t("active_admin.pagination.one",      model: entry_name)
-            else;   I18n.t("active_admin.pagination.one_page", model: entries_name, n: collection.total_count)
+              when 0; I18n.t("active_admin.pagination.empty",    model: entries_name)
+              when 1; I18n.t("active_admin.pagination.one",      model: entry_name)
+              else;   I18n.t("active_admin.pagination.one_page", model: entries_name, n: collection.total_count)
             end
           else
             offset = (collection.current_page - 1) * collection.limit_value

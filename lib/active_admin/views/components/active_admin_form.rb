@@ -18,8 +18,9 @@ module ActiveAdmin
       def to_s
         opening_tag << children.to_s << closing_tag
       end
+
     end
-    
+
     class ActiveAdminForm < FormtasticProxy
       builder_method :active_admin_form_for
 
@@ -27,6 +28,10 @@ module ActiveAdmin
         @resource = resource
         options = options.deep_dup
         options[:builder] ||= ActiveAdmin::FormBuilder
+        if options[:html].nil?
+          options[:html] = {}
+        end
+        options[:html][:role] = 'form'
         form_string = semantic_form_for(resource, options) do |f|
           @form_builder = f
         end
@@ -57,23 +62,38 @@ module ActiveAdmin
           end
           insert_tag(SemanticInputsProxy, form_builder, *args, &wrapped_block)
         else
+          args << {:class => 'form-group'}
           proxy_call_to_form(:inputs, *args, &block)
         end
       end
 
+      def label(*args)
+        args[:html_options] = {:class => 'abc'}
+        proxy_call_to_form :label, *args
+      end
+
       def input(*args)
+        if !args.nil?
+          if args[1].nil?
+            args[1] = {}
+          end
+          args[1][:input_html] = {class: "form-control"}
+        else
+          args = []
+          args << {:input_html => {class: "form-control"}}
+        end
         proxy_call_to_form :input, *args
       end
 
       def actions(*args, &block)
         block_given? ?
-          insert_tag(SemanticActionsProxy, form_builder, *args, &block) :
-          actions(*args) { commit_action_with_cancel_link }
+            insert_tag(SemanticActionsProxy, form_builder, *args, &block) :
+            actions(*args) { commit_action_with_cancel_link }
       end
 
       def commit_action_with_cancel_link
-        action(:submit)
-        cancel_link
+        action(:submit, {button_html: {class: "btn btn-success"}})
+        cancel_link({action: "index"}, {class: 'btn btn-info'})
       end
 
       def has_many(*args, &block)
@@ -98,9 +118,9 @@ module ActiveAdmin
         options = args.extract_options!
         legend = args.shift
         legend_tag = legend ? "<legend><span>#{legend}</span></legend>" : ""
-        klasses = ["inputs", "form-group"]
+        klasses = ["inputs" , "form-group"]
         klasses << options[:class] if options[:class]
-        @opening_tag = "<fieldset class=\"#{klasses.join(" ")}\">#{legend_tag}<ol>"
+        @opening_tag = "<fieldset class=\" #{klasses.join(" ")}\">#{legend_tag}<ol>"
         @closing_tag = "</ol></fieldset>"
         super(*(args << options), &block)
       end

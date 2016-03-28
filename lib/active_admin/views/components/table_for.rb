@@ -17,6 +17,7 @@ module ActiveAdmin
         @row_class      = options.delete(:row_class)
 
         build_table
+        options[:class] = "table table-hover general-table table-striped table-condensed"
         super(options)
         columns(*attrs)
       end
@@ -104,20 +105,22 @@ module ActiveAdmin
 
       def render_data(data, item)
         value = if data.is_a? Proc
-          data.call item
-        elsif item.respond_to? data
-          item.public_send data
-        elsif item.respond_to? :[]
-          item[data]
-        end
+                  data.call item
+                elsif item.respond_to? data
+                  item.public_send data
+                elsif item.respond_to? :[]
+                  item[data]
+                end
         value = pretty_format(value) if data.is_a?(Symbol)
         value = status_tag value     if is_boolean? data, item
         value
       end
 
       def is_boolean?(data, item)
-        if item.class.respond_to? :columns_hash
-          column = item.class.columns_hash[data.to_s] and column.type == :boolean
+        if item.respond_to? :has_attribute?
+          item.has_attribute?(data) &&
+              item.column_for_attribute(data) &&
+              item.column_for_attribute(data).type == :boolean
         end
       end
 
@@ -148,7 +151,7 @@ module ActiveAdmin
 
       def default_options
         {
-          i18n: @resource_class
+            i18n: @resource_class
         }
       end
 
@@ -156,7 +159,7 @@ module ActiveAdmin
 
         attr_accessor :title, :data , :html_class
 
-        def initialize(*args, &block) 
+        def initialize(*args, &block)
           @options = args.extract_options!
 
           @title = args[0]
@@ -164,7 +167,7 @@ module ActiveAdmin
           if @options.has_key?(:class)
             html_classes << @options.delete(:class)
           elsif @title.present?
-            html_classes << "col-#{ActiveAdmin::Dependency.rails.parameterize(@title.to_s)}"
+            html_classes << "col-#{@title.to_s.parameterize('_')}"
           end
           @html_class = html_classes.join(' ')
           @data = args[1] || args[0]

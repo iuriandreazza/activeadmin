@@ -47,3 +47,7 @@ public
 .rails-version
 .rbenv-version
 .localeapp/*
+
+*.iml
+*.ipr
+*.iws

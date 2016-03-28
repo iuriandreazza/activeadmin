@@ -5,7 +5,7 @@ module ActiveAdmin
         include Base
 
         def input_html_options
-          super.merge(class: "datepicker")
+          super.merge(class: "datepicker form-control dpd")
         end
       end
     end

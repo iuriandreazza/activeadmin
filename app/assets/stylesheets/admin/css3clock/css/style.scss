@@ -1,0 +1,38 @@
+
+ul#clock li{
+    border: none;
+}
+
+#clock {
+    position: relative;
+    width: 185px;
+    height: 185px;
+    margin: -95px auto 0;
+    background: url(image-path("clockface.png")) no-repeat;
+    list-style: none;
+}
+
+#sec, #min, #hour {
+    position: absolute;
+    width: 15px;
+    height: 185px;
+    top: 0px;
+    left: 83px;
+}
+
+#sec {
+    background: url(image-path(sechand.png));
+    z-index: 3;
+    overflow: hidden;
+}
+
+#min {
+    background: url(image-path(minhand.png));
+    z-index: 2;
+}
+
+#hour {
+    background: url(image-path(hourhand.png));
+    z-index: 1;
+}
+
